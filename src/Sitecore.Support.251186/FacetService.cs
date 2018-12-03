@@ -12,8 +12,10 @@ namespace Sitecore.Support.XA.Foundation.Search.Services
 {
   public class FacetService : Sitecore.XA.Foundation.Search.Services.FacetService, IFacetService
   {
-    public FacetService(ISearchContextService searchContextService) : base(searchContextService)
+    protected ISharedSitesContext SharedSitesContext { get; }
+    public FacetService(ISearchContextService searchContextService, ISharedSitesContext sharedSitesContext) : base(searchContextService)
     {
+      SharedSitesContext = sharedSitesContext;
     }
 
     public new List<Item> GetFacetItems(IEnumerable<string> facets, string siteName)
@@ -26,8 +28,16 @@ namespace Sitecore.Support.XA.Foundation.Search.Services
       {
         return list;
       }
-      Item item = ServiceLocator.ServiceProvider.GetService<IMultisiteContext>().GetSettingsItem(homeItem).FirstChildInheritingFrom(Sitecore.XA.Foundation.Search.Templates.FacetsGrouping.ID);
-      if (item != null)
+      List<Item> sharedSites = new List<Item>(SharedSitesContext.GetSharedSites(homeItem));
+      Item currentSite = ServiceLocator.ServiceProvider.GetService<IMultisiteContext>().GetSiteItem(homeItem);
+      if(!sharedSites.Contains(currentSite))
+      {
+        sharedSites.Add(currentSite);
+      }
+      foreach (Item sharedSite in sharedSites)
+      {
+        Item item = ServiceLocator.ServiceProvider.GetService<IMultisiteContext>().GetSettingsItem(sharedSite).FirstChildInheritingFrom(Sitecore.XA.Foundation.Search.Templates.FacetsGrouping.ID);
+        if (item != null)
       {
         Item[] array = (from i in item.EnsureFallbackVersion().Axes.GetDescendants()
                         where facetSearchSet.Contains(i.Name.ToLower())
@@ -54,6 +64,7 @@ namespace Sitecore.Support.XA.Foundation.Search.Services
             list.Add(item3);
           }
         }
+      }
       }
       return list;
     }
