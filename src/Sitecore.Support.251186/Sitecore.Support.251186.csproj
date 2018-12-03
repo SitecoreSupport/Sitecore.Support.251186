@@ -66,10 +66,6 @@
       <HintPath>..\packages\SC.Sitecore.Kernel.9.0.1\lib\Sitecore.Kernel.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Sitecore.XA.Foundation.Abstractions">
-      <HintPath>..\packages\SXA90.Sitecore.XA.Foundation.Abstractions.1.6.0\lib\Sitecore.XA.Foundation.Abstractions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Sitecore.XA.Foundation.Common">
       <HintPath>..\packages\SXA90.Sitecore.XA.Foundation.Common.1.6.0\lib\Sitecore.XA.Foundation.Common.dll</HintPath>
       <Private>False</Private>
@@ -95,6 +91,7 @@
   <ItemGroup>
     <Compile Include="FacetService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegisterSearchServices.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Config\Include\zzz\Sitecore.Support.251186.config" />
